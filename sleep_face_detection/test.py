@@ -52,3 +52,5 @@ with torch.no_grad():
         count = i
 
     print('avarage acc: %.5f' % (total_acc/count),'%')
+
+print('test finish!')

@@ -1,12 +1,11 @@
 import torch.nn as nn
 import torch.nn.functional as F
-import torch
 from torchsummary import summary
-
 
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
+
         self.conv1 = nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
         self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1)
@@ -24,17 +23,6 @@ class Net(nn.Module):
 
         return x
 
-    def num_flat_features(self, x):
-        size = x.size()[1:]  # all dimensions except the batch dimension
-        num_features = 1
-        for s in size:
-            num_features *= s
 
-        print('size is', num_features)
-
-        return num_features
-
-
-
-# model = Net().to('cuda')
-# summary(model, (1,26,34))
+model = Net().to('cuda')
+summary(model, (1,26,34))

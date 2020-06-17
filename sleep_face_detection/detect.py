@@ -4,8 +4,6 @@ import numpy as np
 from model import Net
 import torch
 from imutils import face_utils
-import torch.nn as nn
-from torchsummary import summary
 
 IMG_SIZE = (34,26)
 PATH = './weights/trained.pth'
@@ -75,8 +73,8 @@ while cap.isOpened():
     eye_img_r = cv2.resize(eye_img_r, dsize=IMG_SIZE)
     eye_img_r = cv2.flip(eye_img_r, flipCode=1)
 
-    # cv2.imshow('l', eye_img_l)
-    # cv2.imshow('r', eye_img_r)
+    cv2.imshow('l', eye_img_l)
+    cv2.imshow('r', eye_img_r)
 
     eye_input_l = eye_img_l.copy().reshape((1, IMG_SIZE[1], IMG_SIZE[0], 1)).astype(np.float32)
     eye_input_r = eye_img_r.copy().reshape((1, IMG_SIZE[1], IMG_SIZE[0], 1)).astype(np.float32)
@@ -109,11 +107,11 @@ while cap.isOpened():
     state_r = state_r % pred_r
 
 
-    # cv2.rectangle(img, pt1=tuple(eye_rect_l[0:2]), pt2=tuple(eye_rect_l[2:4]), color=(255,255,255), thickness=2)
-    # cv2.rectangle(img, pt1=tuple(eye_rect_r[0:2]), pt2=tuple(eye_rect_r[2:4]), color=(255,255,255), thickness=2)
-    #
-    # cv2.putText(img, state_l, tuple(eye_rect_l[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
-    # cv2.putText(img, state_r, tuple(eye_rect_r[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+    cv2.rectangle(img, pt1=tuple(eye_rect_l[0:2]), pt2=tuple(eye_rect_l[2:4]), color=(255,255,255), thickness=2)
+    cv2.rectangle(img, pt1=tuple(eye_rect_r[0:2]), pt2=tuple(eye_rect_r[2:4]), color=(255,255,255), thickness=2)
+
+    cv2.putText(img, state_l, tuple(eye_rect_l[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+    cv2.putText(img, state_r, tuple(eye_rect_r[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
 
 
   cv2.imshow('result', img)
