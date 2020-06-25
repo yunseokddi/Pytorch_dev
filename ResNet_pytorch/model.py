@@ -60,14 +60,10 @@ class ResNet(nn.Module):
         self.bn1 = nn.BatchNorm2d(16)
         self.relu = nn.ReLU(inplace=True)
 
-        # feature map size = 32x32x16
         self.layers_2n = self.get_layers(block, 16, 16, stride=1)
-        # feature map size = 16x16x32
         self.layers_4n = self.get_layers(block, 16, 32, stride=2)
-        # feature map size = 8x8x64
         self.layers_6n = self.get_layers(block, 32, 64, stride=2)
 
-        # output layers
         self.avg_pool = nn.AvgPool2d(8, stride=1)
         self.fc_out = nn.Linear(64, num_classes)
 

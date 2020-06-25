@@ -46,7 +46,7 @@ def predict(pred):
 
   return pred_tag
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('./dataset/image.jpeg')
 
 while cap.isOpened():
   ret, img_ori = cap.read()
