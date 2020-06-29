@@ -24,5 +24,5 @@ class Net(nn.Module):
         return x
 
 
-model = Net().to('cuda')
-summary(model, (1,26,34))
+# model = Net().to('cuda')
+# summary(model, (1,26,34))

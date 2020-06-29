@@ -20,19 +20,19 @@ train_transform = transforms.Compose([
 train_dataset = eyes_dataset(x_train, y_train, transform=train_transform)
 
 # --------데이터 출력----------
-plt.style.use('dark_background')
-fig = plt.figure()
-
-for i in range(len(train_dataset)):
-    x, y = train_dataset[i]
-
-    plt.subplot(2, 1, 1)
-    plt.title(str(y_train[i]))
-    print(x_train[i].shape)
-    plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
-    print(x_train[i].reshape((26, 34)).shape)
-
-    plt.show()
+# plt.style.use('dark_background')
+# fig = plt.figure()
+#
+# for i in range(len(train_dataset)):
+#     x, y = train_dataset[i]
+#
+#     plt.subplot(2, 1, 1)
+#     plt.title(str(y_train[i]))
+#     print(x_train[i].shape)
+#     plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
+#     print(x_train[i].reshape((26, 34)).shape)
+#
+#     plt.show()
 
 
 def accuracy(y_pred, y_test):
@@ -44,12 +44,12 @@ def accuracy(y_pred, y_test):
 
     return acc
 
-PATH = 'weights/trained.pth'
+PATH = 'weights/trained_for_cpu.pth'
 
 train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
 
 model = Net()
-model.to('cuda')
+model.to('cpu')
 
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
@@ -63,8 +63,7 @@ for epoch in range(epochs):
     model.train()
 
     for i, data in enumerate(train_dataloader, 0):
-        input_1, labels = data[0].to('cuda'), data[1].to('cuda')
-        print(input_1.shape)
+        input_1, labels = data[0].to('cpu'), data[1].to('cpu')
 
         input = input_1.transpose(1, 3).transpose(2, 3)
 
