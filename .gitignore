@@ -1,0 +1,9 @@
+top_detection/Yet-Another-EfficientDet-Pytorch/datasets/top_detection/
+top_detection/Yet-Another-EfficientDet-Pytorch/*.pth
+top_detection/Yet-Another-EfficientDet-Pytorch/logs/
+top_detection/data_generator/annotations/*.json
+top_detection/data_generator/image_data/
+top_detection/data_generator/json_files/
+top_detection/data_generator/video_data/
+top_detection/detector/data/
+top_detection/detector/weights/
