@@ -19,20 +19,22 @@ train_transform = transforms.Compose([
 
 train_dataset = eyes_dataset(x_train, y_train, transform=train_transform)
 
-# --------데이터 출력----------
-# plt.style.use('dark_background')
-# fig = plt.figure()
-#
-# for i in range(len(train_dataset)):
-#     x, y = train_dataset[i]
-#
-#     plt.subplot(2, 1, 1)
-#     plt.title(str(y_train[i]))
-#     print(x_train[i].shape)
-#     plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
-#     print(x_train[i].reshape((26, 34)).shape)
-#
-#     plt.show()
+#--------데이터 출력----------
+plt.style.use('dark_background')
+fig = plt.figure()
+
+for i in range(len(train_dataset)):
+    x, y = train_dataset[i]
+
+
+    plt.subplot(2, 1, 1)
+    plt.title(str(y_train[i]))
+    print(x_train[i].shape)
+    plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
+    print(x_train[i].shape)
+    print(x_train[i].reshape((26, 34)).shape)
+
+    plt.show()
 
 
 def accuracy(y_pred, y_test):

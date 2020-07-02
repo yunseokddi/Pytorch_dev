@@ -7,3 +7,5 @@ top_detection/data_generator/json_files/
 top_detection/data_generator/video_data/
 top_detection/detector/data/
 top_detection/detector/weights/
+face_lanemark_detection/data/
+face_lanemark_detection/weights/

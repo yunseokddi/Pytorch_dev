@@ -46,7 +46,7 @@ def predict(pred):
 
   return pred_tag
 
-cap = cv2.VideoCapture('./dataset/1.jpg')
+cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
   ret, img_ori = cap.read()
@@ -112,7 +112,6 @@ while cap.isOpened():
 
     cv2.putText(img, state_l, tuple(eye_rect_l[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
     cv2.putText(img, state_r, tuple(eye_rect_r[0:2]), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
-
 
   cv2.imshow('result', img)
   if cv2.waitKey(1) == ord('q'):
