@@ -4,19 +4,17 @@ from resnet import ResNet18
 use_cuda = torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 
-PATH = './weights/model_keypoints_68pts_iter_450.pt'
+WEIGHT_PATH = './weights/model_keypoints_68pts_iter_450.pt' #change the weight path
+IMAGE_PATH = './test_image.jpg' #change the image path
 
 net = ResNet18(136).to(device)
-net.load_state_dict(torch.load(PATH))
+net.load_state_dict(torch.load(WEIGHT_PATH))
 net.eval()
 
-cap = cv2.VideoCapture(0)
 
-while cap.isOpened():
-    ret, origin_image = cap.read()
+def detect():
+    origin_image = cv2.imread(IMAGE_PATH)
 
-    if not ret:
-        break
 
     image = cv2.resize(origin_image, (224,224))
     origin_image = image.copy()
@@ -60,5 +58,8 @@ while cap.isOpened():
 
 
         cv2.imshow('result', image)
-        if cv2.waitKey(1) == ord('q'):
-            break
+        cv2.waitKey(0)
+
+
+detect()
+

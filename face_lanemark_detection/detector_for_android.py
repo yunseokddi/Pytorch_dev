@@ -37,15 +37,6 @@ while cap.isOpened():
 
         output_pts = output_pts.view(output_pts.size()[0], -1, 2)
 
-        image = image.squeeze()
-        image = image.data
-        if (torch.cuda.is_available()):
-            image = image.cpu()
-        print(image.shape)
-        image = image.numpy()   # convert to numpy array from a Tensor
-        image = np.transpose(image, (1, 2, 0))
-
-
         output_pts = output_pts[0].data
 
         if (torch.cuda.is_available()):
@@ -57,8 +48,3 @@ while cap.isOpened():
 
         for i in range(36,48):
             cv2.circle(image, (int(output_pts[i, 0]), int(output_pts[i, 1])), 1, (0, 0, 255), -1)
-
-
-        cv2.imshow('result', image)
-        if cv2.waitKey(1) == ord('q'):
-            break

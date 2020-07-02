@@ -12,6 +12,6 @@ net.eval()
 example = torch.rand(1,3,250,250)
 
 traced_script_module = torch.jit.trace(net, example)
-traced_script_module.save("./weights/weight_for_android.pt")
+traced_script_module.save("./weight_for_android.pt")
 
 print(net)

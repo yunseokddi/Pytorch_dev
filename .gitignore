@@ -9,3 +9,5 @@ top_detection/detector/data/
 top_detection/detector/weights/
 face_lanemark_detection/data/
 face_lanemark_detection/weights/
+*.pth
+*.pt
