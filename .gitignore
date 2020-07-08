@@ -11,3 +11,32 @@ face_lanemark_detection/data/
 face_lanemark_detection/weights/
 *.pth
 *.pt
+
+#-------------top_detect_ssd_ver-------------
+top_detect_ssd_ver/data/
+top_detect_ssd_ver/*.md
+.DS_Store
+.idea
+log
+models
+
+eval_results/
+
+# Pytorch Models
+*.pth
+
+# images
+*.jpg
+*.png
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+#---------------------------------------------
