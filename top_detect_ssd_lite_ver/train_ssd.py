@@ -25,7 +25,7 @@ from vision.ssd.config import squeezenet_ssd_config
 from vision.ssd.data_preprocessing import TrainAugmentation, TestTransform
 from torch.utils.tensorboard import SummaryWriter
 
-writer = SummaryWriter('runs/top_experiment3')
+writer = SummaryWriter('runs/top_experiment4_add_data')
 
 parser = argparse.ArgumentParser(
     description='Single Shot MultiBox Detector Training With Pytorch')

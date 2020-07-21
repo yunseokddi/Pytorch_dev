@@ -4,10 +4,14 @@ import time
 
 from backbone import EfficientDetBackbone
 import numpy as np
+import timeutil
+from torchsummary import summary
 
 from efficientdet.utils import BBoxTransform, ClipBoxes
 from utils.utils import preprocess, invert_affine, postprocess, STANDARD_COLORS, standard_to_bgr, get_index_label, \
-    plot_one_box
+    plot_one_box, preprocess_single_image
+import cv2
+
 
 compound_coef = 0
 force_input_size = None
@@ -43,6 +47,7 @@ if use_float16:
     model = model.half()
 
 
+
 def display(preds, imgs, imshow=True, imwrite=False):
     x = []
     y = []
@@ -65,13 +70,18 @@ def display(preds, imgs, imshow=True, imwrite=False):
 
 
 def detect(img_path):
-    ori_imgs, framed_imgs, framed_metas = preprocess(img_path, max_size=input_size)
+    #------------------preprocessing------------------------
+    ori_imgs, framed_imgs, framed_metas = preprocess(img_path, max_size=input_size) #input_size: 512
 
     x = torch.stack([torch.from_numpy(fi).cuda() for fi in framed_imgs], 0)
 
     x = x.to(torch.float32 if not use_float16 else torch.float16).permute(0, 3, 1, 2)
+
+
     with torch.no_grad():
+        start = timeutil.get_epochtime_ms()
         t1 = time.time()
+
         features, regression, classification, anchors = model(x)
 
         regressBoxes = BBoxTransform()
@@ -86,6 +96,8 @@ def detect(img_path):
     t2 = time.time()
     tact_time = (t2 - t1) / 10
     print(f'{tact_time} seconds, {1 / tact_time} FPS, @batch_size 1')
+    print('milisecond is '+str(t2-t1))
+    print("Latency: %fms" % (timeutil.get_epochtime_ms() - start))
 
     return c1, c2
 

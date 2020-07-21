@@ -41,3 +41,6 @@ __pycache__/
 .python-version
 #--------------top_detectoin_efficient_det_ver----------------------
 Yet-Another-EfficientDet-Pytorch-master/
+
+top_detect_ssd_lite_ver/data/
+top_detect_ssd_lite_ver/runs/
