@@ -112,12 +112,14 @@ class top_detect():
 detection = top_detect(weigth_PATH='./weights/yolov3_ckpt_99.pth')  # change your image path and weight path
 
 start = timeutil.get_epochtime_ms()
-x1, y1, x2, y2, box_h = detection.detect(IMG_PATH='sample/files_Test.jpg', )  # output
 
-print(y1)
-img = cv2.imread('./sample/files_Test.jpg')
-img = cv2.rectangle(img, (int(x1[0]), int(y1[0]+box_h[0])), (int(x2[0]), int(y1[0])), (0,0,255), 2)
-cv2.imshow('result', img)
-cv2.waitKey(0)
+x1, y1, x2, y2, box_h = detection.detect(IMG_PATH='sample/files_Test616.jpg', )  # output
+
+# img = cv2.imread('./sample/resize_2.jpg')
+# img = cv2.rectangle(img, (int(x1[0]), int(y1[0]+box_h[0])), (int(x2[0]), int(y1[0])), (0,0,255), 2)
+# cv2.imshow('result', img)
+# cv2.waitKey(0)
+
+print("{} {} {} {}".format(x1[0], y1[0]+box_h[0], x2[0], y1[0]))
 print("Latency: %fms" % (timeutil.get_epochtime_ms() - start))
 

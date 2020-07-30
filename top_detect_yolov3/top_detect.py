@@ -51,7 +51,6 @@ class top_detect():
             img_detections.extend(detections)
 
         for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
-            print(img_i)
             if detections is not None:
                 detections = rescale_boxes(detections, self.IMG_SIZE, img.shape[:2])
                 for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
