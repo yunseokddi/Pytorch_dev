@@ -8,7 +8,7 @@ sample_nets: I implemented the network directly using pytorch.
 - Spatial Transformer net implement
 
 sleep_detect: Implement Android-only applications that detect drowsy drivers
- reference to my blog: https://ys-cs17.tistory.com/24
+- reference to my blog: https://ys-cs17.tistory.com/24
  
  top_detect: Real-time deep learning with top detection implement
  - efficientdet ver
