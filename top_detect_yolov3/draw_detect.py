@@ -112,7 +112,6 @@ class top_detect():
 detection = top_detect(weigth_PATH='./weights/yolov3_ckpt_99.pth')  # change your image path and weight path
 
 start = timeutil.get_epochtime_ms()
-
 x1, y1, x2, y2, box_h = detection.detect(IMG_PATH='sample/files_Test616.jpg', )  # output
 
 # img = cv2.imread('./sample/resize_2.jpg')
