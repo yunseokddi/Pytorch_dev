@@ -8,6 +8,8 @@ from imutils import face_utils
 IMG_SIZE = (34,26)
 PATH = './weights/trained.pth'
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 

@@ -45,6 +45,7 @@ def detect(IMAGE_PATH):
         output_pts = output_pts.numpy()
         output_pts = (output_pts * 50) + 100
 
+
     return output_pts #output_pts[i,0], output_pts[i,1] (i is 36~47)
 
 if __name__ == '__main__':

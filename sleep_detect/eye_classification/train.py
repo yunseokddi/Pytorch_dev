@@ -11,6 +11,8 @@ import torch.optim as optim
 x_train = np.load('./dataset/x_train.npy').astype(np.float32)  # (2586, 26, 34, 1)
 y_train = np.load('./dataset/y_train.npy').astype(np.float32)  # (2586, 1)
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 train_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.RandomRotation(10),
@@ -20,21 +22,21 @@ train_transform = transforms.Compose([
 train_dataset = eyes_dataset(x_train, y_train, transform=train_transform)
 
 #--------데이터 출력----------
-plt.style.use('dark_background')
-fig = plt.figure()
-
-for i in range(len(train_dataset)):
-    x, y = train_dataset[i]
-
-
-    plt.subplot(2, 1, 1)
-    plt.title(str(y_train[i]))
-    print(x_train[i].shape)
-    plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
-    print(x_train[i].shape)
-    print(x_train[i].reshape((26, 34)).shape)
-
-    plt.show()
+# plt.style.use('dark_background')
+# fig = plt.figure()
+#
+# for i in range(len(train_dataset)):
+#     x, y = train_dataset[i]
+#
+#
+#     plt.subplot(2, 1, 1)
+#     plt.title(str(y_train[i]))
+#     print(x_train[i].shape)
+#     plt.imshow(x_train[i].reshape((26, 34)), cmap='gray')
+#     print(x_train[i].shape)
+#     print(x_train[i].reshape((26, 34)).shape)
+#
+#     plt.show()
 
 
 def accuracy(y_pred, y_test):
@@ -46,12 +48,12 @@ def accuracy(y_pred, y_test):
 
     return acc
 
-PATH = 'weights/trained_for_cpu.pth'
+PATH = 'weights/classifier_weights_iter_50.pt'
 
 train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
 
 model = Net()
-model.to('cpu')
+model.to(device)
 
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
@@ -65,7 +67,7 @@ for epoch in range(epochs):
     model.train()
 
     for i, data in enumerate(train_dataloader, 0):
-        input_1, labels = data[0].to('cpu'), data[1].to('cpu')
+        input_1, labels = data[0].to(device), data[1].to(device)
 
         input = input_1.transpose(1, 3).transpose(2, 3)
 

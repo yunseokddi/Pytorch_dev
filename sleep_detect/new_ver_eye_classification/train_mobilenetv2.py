@@ -7,8 +7,7 @@ import torch.optim as optim
 
 
 from torchvision import datasets
-from torchvision.models import resnet18
-from net import Dc_model
+from torchvision.models import mobilenet_v2
 
 import matplotlib.pyplot as plt
 
@@ -21,54 +20,29 @@ train_transforms = transforms.Compose([transforms.RandomRotation(30),
                                        transforms.RandomHorizontalFlip(),
                                        transforms.Resize((24, 24)),
                                        transforms.ToTensor(),
-                                      ])
+                                       transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])])
 
 test_transforms = transforms.Compose([
     transforms.Resize((24, 24)),
     transforms.ToTensor(),
- ])
+    transforms.Normalize([0.5, 0.5, 0.5],
+                         [0.5, 0.5, 0.5])])
 
 train_data = datasets.ImageFolder('./data/train/', transform=train_transforms)
 test_data = datasets.ImageFolder('./data/test/', transform=test_transforms)
 
 train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=32, shuffle=True)
-test_loader = torch.utils.data.DataLoader(dataset=test_data, batch_size=32, shuffle=False)
+test_loader = torch.utils.data.DataLoader(dataset=test_data, batch_size=32, shuffle=True)
 
-# ----------------------------Data view----------------------------
-# def image_convert(img):
-#     img = img.clone().cpu().numpy()
-#     img = img.transpose(1, 2, 0)
-#     std = [0.5, 0.5, 0.5]
-#     mean = [0.5, 0.5, 0.5]
-#     img = img * std + mean
-#     return img
-#
-#
-# def plot_10():
-#     iter_ = iter(train_loader)
-#     images, labels = next(iter_)
-#     an_ = {'0': 'close_look', '1': 'look'}
-#
-#     plt.figure(figsize=(20, 10))
-#     for idx in range(10):
-#         plt.subplot(2, 5, idx + 1)
-#         img = image_convert(images[idx])
-#         label = labels[idx]
-#         plt.imshow(img)
-#         plt.title(an_[str(label.numpy())])
-#     plt.show()
-#
-# plot_10()
-
-model = resnet18(pretrained=True).to(device)
-model_ = Dc_model().to(device)
-model.fc = model_
+model = mobilenet_v2(pretrained=True).to(device)
+model.classifier[1] = nn.Linear(1280,2)
+model.to(device)
 
 
 for param in model.parameters():
     param.requires_grad = False
 
-for param in model.fc.parameters():
+for param in model.classifier.parameters():
     param.requires_grad = True
 
 criterion = nn.CrossEntropyLoss()
