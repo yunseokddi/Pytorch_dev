@@ -46,4 +46,9 @@ sample_nets/Yet-Another-EfficientDet-Pytorch-master/
 
 top_detect/top_detect_ssd_lite_ver/data/
 top_detect/top_detect_ssd_lite_ver/runs/
-top_detect_ssd_lite_ver/runs/
+top_detect/top_detect_yolov3/weights/
+
+#-------------facial age recogment--------
+facial_age_classifier/checkpoint/
+facial_age_classifier/runs/
+
