@@ -68,12 +68,12 @@ class top_detect():
 detection = top_detect(weigth_PATH='./weights/yolov3_ckpt_99.pth')  # change your image path and weight path
 
 total_time = 0.0
+count = 0
 
-for i in range(10):
+for i in range(1000):
     start = timeutil.get_epochtime_ms()
-    x1, x2, y1, y2 = detection.detect(IMG_PATH='sample/resize_compress.jpg', conf_thres=0.5, nms_thres=0.5)  # output
+    x1, x2, y1, y2 = detection.detect(IMG_PATH='sample.jpg', conf_thres=0.5, nms_thres=0.5)  # output
     total_time += timeutil.get_epochtime_ms() - start
-    # print("Latency: %fms" % (timeutil.get_epochtime_ms() - start))
-    # print(x1)
+    count += 1
 
-# print('avg time is '+str(total_time/1000))
+print('avg time is '+str(total_time/count))

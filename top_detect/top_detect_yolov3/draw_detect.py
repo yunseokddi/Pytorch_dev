@@ -4,11 +4,9 @@ from models import *
 from utils.utils import *
 from utils.datasets import *
 
-from PIL import Image
-
 import cv2
-
 import torch
+
 from torch.utils.data import DataLoader
 from torch.autograd import Variable
 
@@ -45,14 +43,14 @@ class top_detect():
             shuffle=False,
             num_workers=0,
         )
-        # start = timeutil.get_epochtime_ms()
+
         for batch_i, (img_paths, input_imgs, ori_img) in enumerate(dataloader):
             img = ori_img
             input_imgs = Variable(input_imgs.type(self.Tensor))
 
             with torch.no_grad():
                 detections = self.model(input_imgs)
-                detections = non_max_suppression(detections, 0.5, 0.5)
+                detections = non_max_suppression(detections, 0.5, 0.3)
 
             self.imgs.extend(img_paths)
             self.img_detections.extend(detections)
@@ -112,9 +110,9 @@ class top_detect():
 detection = top_detect(weigth_PATH='./weights/yolov3_ckpt_99.pth')  # change your image path and weight path
 
 start = timeutil.get_epochtime_ms()
-x1, y1, x2, y2, box_h = detection.detect(IMG_PATH='sample/files_Test616.jpg', )  # output
+x1, y1, x2, y2, box_h = detection.detect(IMG_PATH='sample3.jpg', )  # output
 
-# img = cv2.imread('./sample/resize_2.jpg')
+# img = cv2.imread('./sample2.jpg')
 # img = cv2.rectangle(img, (int(x1[0]), int(y1[0]+box_h[0])), (int(x2[0]), int(y1[0])), (0,0,255), 2)
 # cv2.imshow('result', img)
 # cv2.waitKey(0)

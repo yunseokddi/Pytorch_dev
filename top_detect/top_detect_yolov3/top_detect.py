@@ -10,7 +10,7 @@ from torch.autograd import Variable
 
 class top_detect():
     def __init__(self, weigth_PATH):
-        self.IMG_SIZE = 320
+        self.IMG_SIZE = 416
         self.weigth_PATH = weigth_PATH
         self.device = 'cuda'
         self.model = Darknet('./config/yolov3-custom.cfg', img_size=self.IMG_SIZE).to(self.device)

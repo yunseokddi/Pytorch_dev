@@ -55,3 +55,8 @@ top_detect/top_detect_yolov3/config/
 facial_age_classifier/checkpoint/
 facial_age_classifier/runs/
 
+#-------------facial age recogment new version--------
+facial_age_improve_ver/imbalanced-dataset-sampler/
+facial_age_improve_ver/data/
+facial_age_improve_ver/weights/
+

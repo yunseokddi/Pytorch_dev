@@ -21,13 +21,12 @@ transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.RandomRotation(30),
     transforms.RandomHorizontalFlip(),
-    transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 train_data = torchvision.datasets.ImageFolder('./data/', transform=transform)
-train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_size, shuffle=False)
+train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)
 
 weight_path = './checkpoint/facial_age_classifier900.pth'
 
