@@ -15,10 +15,11 @@ from torch.utils.tensorboard import SummaryWriter
 
 batch_size = 4
 epochs = 51
-data_dir = './data/face_age'
+data_dir = 'data/past_data/face_age'
 writer = SummaryWriter('./runs/experiment1/')
 
 data_transforms = {'train': transforms.Compose([
+    transforms.Resize(200,200),
     transforms.RandomRotation(30),
     transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
@@ -42,7 +43,7 @@ class_names = image_datasets['train'].classes
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-model = EfficientNet.from_pretrained('efficientnet-b7', num_classes=5)
+model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=5)
 model.to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -107,4 +108,4 @@ time_elapsed = time.time() - since
 print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 print('Best val Acc: {:4f}'.format(best_acc))
 
-torch.save(best_model_weights, './weights/best_weights2')
+torch.save(best_model_weights, './weights/best_weights_b3.pth')

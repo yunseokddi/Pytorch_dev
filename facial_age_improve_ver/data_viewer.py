@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 
-root_data_path = './data/face_age/'
+root_data_path = 'data/past_data/face_age/'
 count = 0
 file_num = []
 avg = 0

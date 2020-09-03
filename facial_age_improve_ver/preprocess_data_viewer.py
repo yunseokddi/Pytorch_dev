@@ -21,7 +21,7 @@ def imshow(inp, title=None):
 
 
 batch_size = 4
-data_dir = './data/face_age'
+data_dir = 'data/past_data/face_age'
 
 data_transforms = {'train': transforms.Compose([
     transforms.Resize((128, 128)),

@@ -26,4 +26,4 @@ def sub_folder_delete(ROOT_PATH):
 if __name__ == '__main__':
     # change_folder_name('./data/face_age/')
     # folder_merge('./data/face_age/')
-    sub_folder_delete('./data/face_age/')
+    sub_folder_delete('data/past_data/face_age/')
