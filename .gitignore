@@ -52,12 +52,13 @@ top_detect/top_detect_yolov3/label/
 top_detect/top_detect_yolov3/config/
 
 #-------------facial age recogment--------
-facial_age_ResNet/checkpoint/
-facial_age_ResNet/runs/
+facial_age_classifier/ResNet_ver/checkpoint/
+facial_age_classifier/ResNet_ver/runs/
 
 #-------------facial age recogment new version--------
-facial_age_EfficientNet/imbalanced-dataset-sampler/
-facial_age_EfficientNet/data/
-facial_age_EfficientNet/weights/
-facial_age_EfficientNet/data_preprocess/class_4_data/
-facial_age_EfficientNet/data_preprocess/data/
+facial_age_classifier/EfficientNet_ver/imbalanced-dataset-sampler/
+facial_age_classifier/EfficientNet_ver/data/
+facial_age_classifier/EfficientNet_ver/weights/
+facial_age_classifier/EfficientNet_ver/data_preprocess/class_4_data/
+facial_age_classifier/EfficientNet_ver/data_preprocess/data/
+facial_age_classifier/EfficientNet_ver/data_preprocess/sample/
