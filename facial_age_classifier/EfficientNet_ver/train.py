@@ -1,8 +1,6 @@
 import os
 import torch
-import torchvision
 import torchvision.transforms as transforms
-import numpy as np
 import torch.optim as optim
 import torch.nn as nn
 import time
@@ -14,8 +12,8 @@ from efficientnet_pytorch import EfficientNet
 from torch.utils.tensorboard import SummaryWriter
 
 batch_size = 16
-epochs = 51
-data_dir = 'data/new_data/'
+epochs = 31
+data_dir = './data/class_15_data/'
 writer = SummaryWriter('./runs/experiment1/')
 
 data_transforms = {'train': transforms.Compose([
@@ -27,7 +25,8 @@ data_transforms = {'train': transforms.Compose([
 ]),
     'val': transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
+        transforms.Resize(200,200)
     ])}
 
 image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
@@ -43,7 +42,7 @@ class_names = image_datasets['train'].classes
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=4)
+model = EfficientNet.from_pretrained('efficientnet-b5', num_classes=15)
 model.to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=0.001)
@@ -93,7 +92,7 @@ for epoch in range(epochs):
         epoch_loss = running_loss / dataset_sizes[phase]
         epoch_acc = running_corrects.double() / dataset_sizes[phase]
         # writer.add_graph('epoch loss', epoch_loss, epoch)
-        # writer.add_graph('epoch add', epoch_acc, epoch)
+        # writer.add_graph('epoch acc', epoch_acc, epoch)
 
         print('{} Loss: {:.4f} Acc: {:.4f}'.format(
             phase, epoch_loss, epoch_acc))
@@ -108,4 +107,4 @@ time_elapsed = time.time() - since
 print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
 print('Best val Acc: {:4f}'.format(best_acc))
 
-torch.save(best_model_weights, './weights/best_weights_b3.pth')
+torch.save(best_model_weights, './weights/best_weights_b5_class_15.pth')

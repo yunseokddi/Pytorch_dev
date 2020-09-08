@@ -6,23 +6,25 @@ import argparse
 from efficientnet_pytorch import EfficientNet
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--data", type=str, default='./sample/sample.jpg')
+parser.add_argument("--data", type=str, default='./sample/me.jpg')
 opt = parser.parse_args()
 
-age_dict = {0:'1~20', 1:'21~27', 2:'28~45', 3:'46~65'}
+age_dict = {0:'1~5', 1:'6~10', 2:'11~15', 3:'16~20',4 :'21~25', 5:'26~30', 6:'31~35', 7:'36~40', 8:'41~45',
+            9:'46~50', 10:'51~55', 11:'56~60', 12:'61~65', 13:'66~70', 14:'71~'}
 
 data_dir = opt.data
-weight_path = 'weights/best_weights_b3.pth'
+weight_path = 'weights/class_15_weights/best_weights_acc78.pth'
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=4)
+model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=15)
 model.load_state_dict(torch.load(weight_path))
 model.to(device)
 
 model.eval()
 
 inputs = cv2.imread(data_dir)
+inputs = cv2.resize(inputs, (200,200))
 inputs = inputs[:, :, ::-1].transpose((2, 0, 1)).copy()
 inputs = torch.from_numpy(inputs).float().div(255.0).unsqueeze(0)
 inputs = inputs.cuda()
