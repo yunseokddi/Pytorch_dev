@@ -8,7 +8,7 @@ class analysis_data:
         self.root_dir = root_dir
         self.start_age = start_age
         self.end_age = end_age + 1
-        self.x = [i for i in range(self.start_age-1, self.end_age, 5)]
+        self.x = [i for i in range(self.start_age, self.end_age)]
 
     def get_file_len_list(self):
         folder_len = self.end_age - self.start_age + 1
@@ -44,7 +44,6 @@ class analysis_data:
         plt.plot(self.x, file_num)
         plt.xlabel('age')
         plt.ylabel('data num')
-        # plt.xticks([i for i in range(self.start_age, self.end_age, 5)])
 
     def draw_avg_len_plt(self, avg):
         avg_y = [avg for i in range(self.start_age, self.end_age)]
@@ -59,6 +58,7 @@ class analysis_data:
         plt.xlabel('age')
         plt.ylabel('data num')
         plt.xticks([i for i in range(self.start_age - 1, self.end_age, 5)])
+        self.x = [i for i in range(self.start_age- 1, self.end_age, 5)]
         plt.bar(self.x, file_num)
         plt.show()
 
@@ -85,7 +85,7 @@ class analysis_data:
         plt.title('Facial age data')
         plt.xlabel('age')
         plt.ylabel('data num')
-        plt.xticks([i for i in range(self.start_age - 1, self.end_age, merge_num)])
+        plt.xticks([i for i in range(self.start_age - 1, self.end_age-1, merge_num)])
         plt.bar(x, merge_file)
         plt.show()
 
@@ -123,7 +123,6 @@ if __name__ == '__main__':
 
     if opt.draw_bar is True:
         analysis.draw_bar(file_num)
-        analysis.imshow_plot()
 
     if opt.draw_merge_bar is True:
         merge_file = analysis.merge_file_num(file_num, opt.merge_num)

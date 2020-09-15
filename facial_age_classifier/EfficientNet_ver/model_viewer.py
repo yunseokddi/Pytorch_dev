@@ -1,8 +1,5 @@
 from torchsummary import summary
 from efficientnet_pytorch import EfficientNet
-from torch.autograd import Variable
-
-import torch
 
 
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=5)
