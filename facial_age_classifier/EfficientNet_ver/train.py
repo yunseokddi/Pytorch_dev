@@ -42,7 +42,7 @@ class_names = image_datasets['train'].classes
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-model = EfficientNet.from_pretrained('efficientnet-b5', num_classes=15)
+model = EfficientNet.from_pretrained('efficientnet-b3', num_classes=15)
 model.to(device)
 
 optimizer = optim.Adam(model.parameters(), lr=0.001)
