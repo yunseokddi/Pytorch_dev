@@ -5,7 +5,7 @@ import argparse
 from efficientnet_pytorch import EfficientNet
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--data", type=str, default='./sample/me.jpg')
+parser.add_argument("--data", type=str, default='./sample/sample13.jpg')
 opt = parser.parse_args()
 
 age_dict = {0:'1~5', 1:'6~10', 2:'11~15', 3:'16~20',4 :'21~25', 5:'26~30', 6:'31~35', 7:'36~40', 8:'41~45',
@@ -24,6 +24,7 @@ model.eval()
 
 inputs = cv2.imread(data_dir)
 inputs = cv2.resize(inputs, (200,200))
+ori_img = inputs.copy()
 inputs = inputs[:, :, ::-1].transpose((2, 0, 1)).copy()
 inputs = torch.from_numpy(inputs).float().div(255.0).unsqueeze(0)
 inputs = inputs.cuda()
@@ -32,4 +33,6 @@ inputs = inputs.cuda()
 outputs = model(inputs)
 _, preds = torch.max(outputs, 1)
 
-print('당신의 나이는 {}세 입니다.'.format(age_dict[preds.item()]))
+cv2.putText(ori_img, str(age_dict[preds.item()]),(75, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.5, color=(0,0,0))
+cv2.imshow('result', ori_img)
+cv2.waitKey(0)
