@@ -5,7 +5,7 @@ import argparse
 from efficientnet_pytorch import EfficientNet
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--data", type=str, default='./sample/sample13.jpg')
+parser.add_argument("--data", type=str, default='./sample.png')
 opt = parser.parse_args()
 
 age_dict = {0:'1~5', 1:'6~10', 2:'11~15', 3:'16~20',4 :'21~25', 5:'26~30', 6:'31~35', 7:'36~40', 8:'41~45',

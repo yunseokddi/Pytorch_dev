@@ -64,6 +64,6 @@ facial_age_classifier/EfficientNet_ver/data_preprocess/data/
 facial_age_classifier/EfficientNet_ver/data_preprocess/sample/
 
 #------------car_distance--------
-car_distance/data/
-car_distance/weights/
+car_distance/yolo_ver/data/
+car_distance/yolo_ver/weights/
 
