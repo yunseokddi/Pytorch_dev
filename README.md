@@ -15,9 +15,12 @@ top_detect: Real-time deep learning with top detection implement
 - SSD-lite ver
 - YOLOv3 ver
  
- tutorial: It's my playground
+tutorials: It's my playground
 
 facial_age_classifier: Implement faicial age classifier
 - ResNet ver
 - EfficientNet ver
 - data from kaggle facial age data
+
+car_distance_recognition: Implement car distance recognition on 2d images using yolov5
+- Must run with python 3.8 version
