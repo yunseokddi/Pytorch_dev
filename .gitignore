@@ -67,5 +67,6 @@ car_distance_recognition/sample/
 
 facial_age_classifier/EfficientNet_ver/data_preprocess/sample/
 
-#------------car_distance--------
+#--------------------VDSR-----------------------
+VDSR/dataset/
 
