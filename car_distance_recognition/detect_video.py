@@ -8,7 +8,7 @@ from utils.general import (non_max_suppression, scale_coords, plot_one_box)
 from utils.torch_utils import select_device
 
 
-def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.4, iou_thres=0.5, classes=None, agnostic_nms=True,
+def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.8, iou_thres=0.7, classes=None, agnostic_nms=True,
            focal_distance=0.03, car_height=1.7):
     device = select_device('0')
     half = True
@@ -43,12 +43,13 @@ def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.4, iou_thres=
                         distance = (
                                            focal_distance / car_img_height) * car_height * 10000  # distance = (f/obj height) * real height
                         result_distance = str(round(distance.item(), 1)) + 'm'
-                        plot_one_box(xyxy, im0, label=None, color=colors, line_thickness=3)
+                        inner = plot_one_box(xyxy, im0, label=None, color=colors, line_thickness=3)
                         tl = 3 or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1
                         c1, c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
                         tf = max(tl - 1, 1)
 
-                        cv2.putText(im0, result_distance, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf,
+                        if inner is True:
+                            cv2.putText(im0, result_distance, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf,
                                     lineType=cv2.LINE_AA)
 
             if view_img:
