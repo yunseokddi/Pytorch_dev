@@ -16,6 +16,7 @@ def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.8, iou_thres=
     model.half()
     dataset = LoadImages(source, img_size=imgsz)
     colors = (0, 0, 255)
+    names = model.module.names if hasattr(model, 'module') else model.names
 
     img = torch.zeros((1, 3, imgsz, imgsz), device=device)
     _ = model(img.half())
@@ -35,22 +36,27 @@ def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.8, iou_thres=
 
             if det is not None and len(det):
                 det[:, :4] = scale_coords(img.shape[2:], det[:, :4], im0.shape).round()
-
+                # print(det)
+                # print(det.shape)
+                # print(det[0][4])
+                # max_det = det[0]
                 for *xyxy, conf, cls in reversed(det):
                     if view_img:
-                        car_img_height = xyxy[3] - xyxy[1]
 
+                        car_img_height = xyxy[3] - xyxy[1]
+                        label = '%s %.2f' % (names[int(cls)], conf)
                         distance = (
                                            focal_distance / car_img_height) * car_height * 10000  # distance = (f/obj height) * real height
-                        result_distance = str(round(distance.item(), 1)) + 'm'
-                        inner = plot_one_box(xyxy, im0, label=None, color=colors, line_thickness=3)
+                        result_distance = str(round(distance.item())) + 'm'
+                        inner = plot_one_box(xyxy, im0, label=label, color=colors, line_thickness=3)
                         tl = 3 or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1
                         c1, c2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
                         tf = max(tl - 1, 1)
 
                         if inner is True:
-                            cv2.putText(im0, result_distance, (c1[0], c1[1] - 2), 0, tl / 3, [225, 255, 255], thickness=tf,
-                                    lineType=cv2.LINE_AA)
+                            cv2.putText(im0, result_distance, (c1[0] - 15, c1[1] + 75), 0, tl / 3, [225, 255, 255],
+                                        thickness=tf,
+                                        lineType=cv2.LINE_AA)
 
             if view_img:
                 cv2.imshow(p, im0)
@@ -64,7 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('--source', type=str, default='./sample/sample2.mp4', help='enter source path')
     parser.add_argument('--focal_distance', type=float, default='0.03', help='enter focal distance')
     parser.add_argument('--car_height', type=float, default='1.7', help='enter car''s avg height')
-    opt =parser.parse_args()
+    opt = parser.parse_args()
 
     weights = opt.weights
     source = opt.source
@@ -72,4 +78,4 @@ if __name__ == '__main__':
     car_height = opt.car_height
 
     with torch.no_grad():
-        detect(source=source, weights=weights, focal_distance=focal_distance, car_height=car_height )
+        detect(source=source, weights=weights, focal_distance=focal_distance, car_height=car_height)
