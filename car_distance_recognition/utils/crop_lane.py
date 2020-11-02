@@ -53,7 +53,7 @@ while True:
 
         print(inner)
         # print('{}, {}'.format(p[0], p[1]))
-        cv2.circle(cropped_image, (int(p[0]), int(p[1])), 10, (255, 0, 0))
+        # cv2.circle(cropped_image, (int(p[0]), int(p[1])), 10, (255, 0, 0))
         cv2.imshow('asd', cropped_image)
 
         k = cv2.waitKey(1)

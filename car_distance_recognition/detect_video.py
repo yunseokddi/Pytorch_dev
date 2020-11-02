@@ -46,7 +46,7 @@ def detect(source, weights, view_img=True, imgsz=640, conf_thres=0.8, iou_thres=
                         car_img_height = xyxy[3] - xyxy[1]
                         label = '%s %.2f' % (names[int(cls)], conf)
                         distance = (
-                                           focal_distance / car_img_height) * car_height * 10000  # distance = (f/obj height) * real height
+                                           focal_distance / car_img_height) * car_height * 10000 - 1 # distance = (f/obj height) * real height
                         result_distance = str(round(distance.item())) + 'm'
                         inner = plot_one_box(xyxy, im0, label=label, color=colors, line_thickness=3)
                         tl = 3 or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1
