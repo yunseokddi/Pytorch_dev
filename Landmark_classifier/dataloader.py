@@ -6,11 +6,10 @@ from PIL import Image
 import pandas as pd
 import os
 import torch
-import numpy as np
 
 
 class TrainDataSet(Dataset):
-    def __init__(self, train_dir=None, train_csv_dir=None, train_csv_exist_dir=None, image_size=320, transform=None):
+    def __init__(self, train_dir=None, train_csv_dir=None, train_csv_exist_dir=None, transform=None):
         self.train_dir = train_dir
         self.train_csv_dir = train_csv_dir
         self.train_csv_exist_dir = train_csv_exist_dir
@@ -48,13 +47,12 @@ class TrainDataSet(Dataset):
     def __getitem__(self, idx):
         image = Image.open(self.train_image[idx])
         image = self.transform(image)
-        # image = np.transpose(image, axes=(2,0,1))
         label = self.train_label[idx]
 
         return {'image': image, 'label': label}
 
-def collate_fn(batch):
-    image = [ x['image'] for x in batch]
+def collate_fn(batch) :
+    image = [x['image'] for x in batch]
     label = [x['label'] for x in batch]
 
     return torch.tensor(image).float().cuda(), torch.tensor(label).long().cuda()
