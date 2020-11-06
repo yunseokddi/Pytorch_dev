@@ -54,8 +54,7 @@ data_transforms = transforms.Compose([
 df = pd.read_csv(args.category_dir)
 
 if __name__ == "__main__":
-    train_dataset = TrainDataSet(train_dir=args.train_dir, train_csv_dir=args.train_csv_dir,
-                                 train_csv_exist_dir=args.train_csv_exist_dir, transform=data_transforms)
+    train_dataset = TrainDataSet(args, transform=data_transforms)
 
     train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
 

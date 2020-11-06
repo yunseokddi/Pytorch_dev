@@ -19,18 +19,16 @@ import torch.nn.functional as F
 # 이미 생성되어 있을 경우 train_csv_exist.csv 파일로 Dataset을 생성합니다.
 parser = argparse.ArgumentParser()
 
-parser.add_argument('--train_dir', dest='train_dir', default="./dataset/train/")
-parser.add_argument('--train_csv_dir', dest='train_csv_dir', default="./dataset/train.csv")
-parser.add_argument('--train_csv_exist_dir', dest='train_csv_exist_dir', default="./dataset/train_exist.csv")
+parser.add_argument('--train_dir', dest='train_dir', default="./public/train/")
+parser.add_argument('--train_csv_dir', dest='train_csv_dir', default="./public/train.csv")
+parser.add_argument('--train_csv_exist_dir', dest='train_csv_exist_dir', default="./public/train_exist.csv")
 
-parser.add_argument('--test_dir', dest='test_dir', default="./dataset/test/")
-parser.add_argument('--test_csv_dir', dest='test_csv_dir', default="./dataset/sample_submisstion.csv")
-parser.add_argument('--test_csv_exist_dir', dest='test_csv_exist_dir',
-                    default="./dataset/sample_submission_exist.csv")
+parser.add_argument('--test_dir', dest='test_dir', default="./public/test/")
+parser.add_argument('--test_csv_dir', dest='test_csv_dir', default="./public/sample_submission.csv")
+parser.add_argument('--test_csv_exist_dir', dest='test_csv_exist_dir', default="./public/sample_submission_exist.csv")
 
-parser.add_argument('--test_csv_submission_dir', dest='test_csv_submission_dir',
-                    default="./dataset/my_submission.csv")
-parser.add_argument('--model_dir', dest='model_dir', default="./checkpoint/")
+parser.add_argument('--test_csv_submission_dir', dest='test_csv_submission_dir', default="./public/my_submission.csv")
+parser.add_argument('--model_dir', dest='model_dir', default="./ckpt/")
 
 parser.add_argument('--image_size', dest='image_size', type=int, default=256)
 parser.add_argument('--epochs', dest='epochs', type=int, default=100)
@@ -95,54 +93,54 @@ class TrainDataset(Dataset) :
 
         return {'image' : image, 'label' :label}
 
-# class TestDataset(Dataset) :
-#     def __init__(self, args) :
-#         self.test_dir = args.test_dir
-#         self.test_csv_dir = args.test_csv_dir
-#         self.test_csv_exist_dir = args.test_csv_exist_dir
-#         self.args = args
-#         self.test_image = list()
-#         self.test_label = list()
-#         if not os.path.isfile(self.test_csv_exist_dir) :
-#             self.test_csv = pd.read_csv(self.test_csv_dir)
-#             self.test_csv_exist = self.test_csv.copy()
-#             self.load_full_data()
-#             self.test_csv_exist.to_csv(self.test_csv_exist_dir, index=False)
-#         else :
-#             self.load_exist_data()
-#
-#     def load_full_data(self) :
-#         for i in tqdm(range(len(self.test_csv))) :
-#             filename = self.test_csv['id'][i]
-#             fullpath = glob(self.test_dir + "*/" + filename.replace('[', '[[]') + ".JPG")[0]
-#             label = self.test_csv['id'][i]
-#
-#             self.test_csv_exist.loc[i,'id'] = fullpath
-#             self.test_image.append(fullpath)
-#             self.test_label.append(label)
-#
-#
-#     def load_exist_data(self) :
-#         self.test_csv_exist = pd.read_csv(self.test_csv_exist_dir)
-#         for i in tqdm(range(len(self.test_csv_exist))) :
-#             fullpath = self.test_csv_exist['id'][i]
-#             label = self.test_csv_exist['id'][i]
-#
-#             self.test_image.append(fullpath)
-#             self.test_label.append(label)
+class TestDataset(Dataset) :
+    def __init__(self, args) :
+        self.test_dir = args.test_dir
+        self.test_csv_dir = args.test_csv_dir
+        self.test_csv_exist_dir = args.test_csv_exist_dir
+        self.args = args
+        self.test_image = list()
+        self.test_label = list()
+        if not os.path.isfile(self.test_csv_exist_dir) :
+            self.test_csv = pd.read_csv(self.test_csv_dir)
+            self.test_csv_exist = self.test_csv.copy()
+            self.load_full_data()
+            self.test_csv_exist.to_csv(self.test_csv_exist_dir, index=False)
+        else :
+            self.load_exist_data()
+
+    def load_full_data(self) :
+        for i in tqdm(range(len(self.test_csv))) :
+            filename = self.test_csv['id'][i]
+            fullpath = glob(self.test_dir + "*/" + filename.replace('[', '[[]') + ".JPG")[0]
+            label = self.test_csv['id'][i]
+
+            self.test_csv_exist.loc[i,'id'] = fullpath
+            self.test_image.append(fullpath)
+            self.test_label.append(label)
 
 
-    # def __len__(self) :
-    #     return len(self.test_image)
-    #
-    # def __getitem__(self, idx) :
-    #     image = Image.open(self.test_image[idx])
-    #     image = image.resize((self.args.image_size, self.args.image_size))
-    #     image = np.array(image) / 255.
-    #     image = np.transpose(image, axes=(2, 0, 1))
-    #     label = self.test_label[idx]
-    #
-    #     return {'image' : image, 'label' :label}
+    def load_exist_data(self) :
+        self.test_csv_exist = pd.read_csv(self.test_csv_exist_dir)
+        for i in tqdm(range(len(self.test_csv_exist))) :
+            fullpath = self.test_csv_exist['id'][i]
+            label = self.test_csv_exist['id'][i]
+
+            self.test_image.append(fullpath)
+            self.test_label.append(label)
+
+
+    def __len__(self) :
+        return len(self.test_image)
+
+    def __getitem__(self, idx) :
+        image = Image.open(self.test_image[idx])
+        image = image.resize((self.args.image_size, self.args.image_size))
+        image = np.array(image) / 255.
+        image = np.transpose(image, axes=(2, 0, 1))
+        label = self.test_label[idx]
+
+        return {'image' : image, 'label' :label}
 
 # DataLoader 생성을 위한 collate_fn
 def collate_fn(batch) :
@@ -159,9 +157,9 @@ def collate_fn_test(batch) :
 
 # Dataset, Dataloader 정의
 train_dataset = TrainDataset(args)
-# test_dataset = TestDataset(args)
+test_dataset = TestDataset(args)
 train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, collate_fn=collate_fn)
-# test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=collate_fn_test)
+test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=collate_fn_test)
 
 # Model
 # 여기서는 간단한 CNN 3개짜리 모델을 생성하였습니다.
@@ -194,47 +192,45 @@ if args.train :
     for epoch in range(args.epochs) :
         epoch_loss = 0.
         for iter, (image, label) in enumerate(train_dataloader) :
-            print(image)
-            print(label)
-            # pred = model(image)
-    #         loss = criterion(input=pred, target=label)
-    #
-    #         optimizer.zero_grad()
-    #         loss.backward()
-    #         optimizer.step()
-    #         epoch_loss += loss.detach().item()
-    #         print('epoch : {0} step : [{1}/{2}] loss : {3}'.format(epoch, iter, len(train_dataloader), loss.detach().item()))
-    #     epoch_loss /= len(train_dataloader)
-    #     print('\nepoch : {0} epoch loss : {1}\n'.format(epoch, epoch_loss))
-    #
-    #     torch.save(model.state_dict(), args.model_dir + "epoch_{0:03}.pth".format(epoch))
-    # # 모든 epoch이 끝난 뒤 test 진행
-    # model.eval()
-    # submission = pd.read_csv(args.test_csv_dir)
-    # for iter, (image, label) in enumerate(test_dataloader):
-    #     pred = model(image)
-    #     pred = nn.Softmax(dim=1)(pred)
-    #     pred = pred.detach().cpu().numpy()
-    #     landmark_id = np.argmax(pred, axis=1)
-    #     confidence = pred[0,landmark_id]
-    #     submission.loc[iter, 'landmark_id'] = landmark_id
-    #     submission.loc[iter, 'conf'] = confidence
-    # submission.to_csv(args.test_csv_submission_dir, index=False)
+            pred = model(image)
+            loss = criterion(input=pred, target=label)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            epoch_loss += loss.detach().item()
+            print('epoch : {0} step : [{1}/{2}] loss : {3}'.format(epoch, iter, len(train_dataloader), loss.detach().item()))
+        epoch_loss /= len(train_dataloader)
+        print('\nepoch : {0} epoch loss : {1}\n'.format(epoch, epoch_loss))
+
+        torch.save(model.state_dict(), args.model_dir + "epoch_{0:03}.pth".format(epoch))
+    # 모든 epoch이 끝난 뒤 test 진행
+    model.eval()
+    submission = pd.read_csv(args.test_csv_dir)
+    for iter, (image, label) in enumerate(test_dataloader):
+        pred = model(image)
+        pred = nn.Softmax(dim=1)(pred)
+        pred = pred.detach().cpu().numpy()
+        landmark_id = np.argmax(pred, axis=1)
+        confidence = pred[0,landmark_id]
+        submission.loc[iter, 'landmark_id'] = landmark_id
+        submission.loc[iter, 'conf'] = confidence
+    submission.to_csv(args.test_csv_submission_dir, index=False)
 
 # Test
 # argument의 --train을 False로 두면 Test만 진행합니다.
 # Softmax로 confidence score를 계산하고, argmax로 class를 추정하여 csv 파일로 저장합니다.
 # 현재 batch=1로 불러와서 조금 느릴 수 있습니다.
-# else :
-#     model.load_state_dict(torch.load(args.model_dir + "epoch_{0:03}.pth".format(args.load_epoch)))
-#     model.eval()
-#     submission = pd.read_csv(args.test_csv_dir)
-#     for iter, (image, label) in enumerate(test_dataloader):
-#         pred = model(image)
-#         pred = nn.Softmax(dim=1)(pred)
-#         pred = pred.detach().cpu().numpy()
-#         landmark_id = np.argmax(pred, axis=1)
-#         confidence = pred[0,landmark_id]
-#         submission.loc[iter, 'landmark_id'] = landmark_id
-#         submission.loc[iter, 'conf'] = confidence
-#     submission.to_csv(args.test_csv_submission_dir, index=False)
+else :
+    model.load_state_dict(torch.load(args.model_dir + "epoch_{0:03}.pth".format(args.load_epoch)))
+    model.eval()
+    submission = pd.read_csv(args.test_csv_dir)
+    for iter, (image, label) in enumerate(test_dataloader):
+        pred = model(image)
+        pred = nn.Softmax(dim=1)(pred)
+        pred = pred.detach().cpu().numpy()
+        landmark_id = np.argmax(pred, axis=1)
+        confidence = pred[0,landmark_id]
+        submission.loc[iter, 'landmark_id'] = landmark_id
+        submission.loc[iter, 'conf'] = confidence
+    submission.to_csv(args.test_csv_submission_dir, index=False)

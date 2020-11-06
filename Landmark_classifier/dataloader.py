@@ -5,14 +5,12 @@ from PIL import Image
 
 import pandas as pd
 import os
-import torch
-
 
 class TrainDataSet(Dataset):
-    def __init__(self, train_dir=None, train_csv_dir=None, train_csv_exist_dir=None, transform=None):
-        self.train_dir = train_dir
-        self.train_csv_dir = train_csv_dir
-        self.train_csv_exist_dir = train_csv_exist_dir
+    def __init__(self,args, transform=None):
+        self.train_dir = args.train_dir
+        self.train_csv_dir = args.train_csv_dir
+        self.train_csv_exist_dir = args.train_csv_exist_dir
         self.train_image = []
         self.train_label = []
         self.transform = transform
@@ -55,5 +53,4 @@ def collate_fn(batch) :
     image = [x['image'] for x in batch]
     label = [x['label'] for x in batch]
 
-    return torch.tensor(image).float().cuda(), torch.tensor(label).long().cuda()
-
+    return image, label
