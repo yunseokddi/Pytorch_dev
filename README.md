@@ -24,3 +24,7 @@ This is my deep learning projects with pytorch
 
 **car_distance_recognition**: Implement car distance recognition on 2d images using yolov5
 - Must run with python 3.8 version
+
+
+**Landmark_classifier**: Implement Landmark classifier on DACON dataset using efficientnet
+- Data by https://www.dacon.io/competitions/official/235585/overview/
