@@ -6,7 +6,8 @@ import argparse
 import pandas as pd
 import matplotlib as mpl
 
-from dataloader import TrainDataSet
+from PIL import Image
+from DataLoader import LandmarkDataset
 from torch.utils.data import DataLoader
 
 mpl.rcParams['axes.unicode_minus'] = False
@@ -15,7 +16,6 @@ plt.rcParams["font.family"] = 'NanumGothic'
 
 
 def imshow(inp, title=None, df=None):
-    title_ls = title.tolist()
     cvt_title = []
 
     inp = inp.numpy().transpose((1, 2, 0))
@@ -24,8 +24,9 @@ def imshow(inp, title=None, df=None):
     inp = std * inp + mean
     inp = np.clip(inp, 0, 1)
 
-    for idx in title_ls:
-        cvt_title.append(df["landmark_name"].loc[idx])
+    for idx in title:
+        cvt_title.append(df["landmark_name"].loc[idx.item()])
+
     plt.imshow(inp)
 
     if title is not None:
@@ -43,21 +44,29 @@ parser.add_argument('--image_size', dest='image_size', type=int, default=256)
 
 args = parser.parse_args()
 
-data_transforms = transforms.Compose([
-    transforms.Resize((128, 128)),
-    transforms.RandomRotation(30),
+transforms_train = transforms.Compose([
+    transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(),
+    transforms.RandomChoice([
+        transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+        transforms.RandomResizedCrop(224),
+        transforms.RandomAffine(
+            degrees=15, translate=(0.2, 0.2),
+            scale=(0.8, 1.2), shear=15, resample=Image.BILINEAR)
+    ]),
     transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    transforms.Normalize((0.4452, 0.4457, 0.4464), (0.2592, 0.2596, 0.2600)),
 ])
 
 df = pd.read_csv(args.category_dir)
 
 if __name__ == "__main__":
-    train_dataset = TrainDataSet(args, transform=data_transforms)
+    train_dataset = LandmarkDataset(mode='train', transforms=transforms_train)
+    train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=4)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True)
+    df = pd.read_csv(args.category_dir)
 
-    data = next(iter(train_dataloader))
-    out = torchvision.utils.make_grid(data['image'])
-    imshow(out, title=data['label'], df=df)
+    for image, label in train_dataloader:
+        out = torchvision.utils.make_grid(image)
+        print(type(label[0].item()))
+        imshow(out, title=label, df=df)
