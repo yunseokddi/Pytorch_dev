@@ -12,11 +12,16 @@ from torchvision import transforms
 class LandmarkDataset(Dataset):
     def __init__(self, mode: str = 'train', transforms: transforms = None):
         self.mode = mode
+
         self.image_ids = glob.glob(f'./dataset/{mode}/**/**/*')
         if self.mode == 'train':
+            self.image_ids = glob.glob(f'./dataset/{mode}/**/**/*')
             with open('./dataset/train.csv') as f:
                 labels = list(csv.reader(f))[1:]
                 self.labels = {label[0]: int(label[1]) for label in labels}
+
+        else:
+            self.image_ids = glob.glob(f'./dataset/{mode}/**/*')
 
         self.transforms = transforms
 
@@ -34,3 +39,4 @@ class LandmarkDataset(Dataset):
             return image, label
         else:
             return image_id, image
+

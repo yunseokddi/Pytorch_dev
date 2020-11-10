@@ -2,7 +2,6 @@ import argparse
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import math
 import copy
 import time
 
@@ -13,33 +12,22 @@ from torch.utils.data import DataLoader
 from efficientnet_pytorch import EfficientNet
 from torch.optim.lr_scheduler import StepLR
 from utils import AverageMeter, gap
+from tensorboardX import SummaryWriter
 
 
 def train(model: nn.Module, data_loader: DataLoader, criterion: nn.Module, optimizer: optim,
-          scheduler: optim.lr_scheduler, device: torch.device):
-    epoch_size = len(train_dataset) // batch_size
-    num_epochs = math.ceil(max_iter / epoch_size)
+          scheduler: optim.lr_scheduler, device: torch.device, args=None):
 
-    iteration = 0
     best_acc = 0.0
     losses = AverageMeter()
     scores = AverageMeter()
     corrects = AverageMeter()
 
     model.train()
-
-    verbose_eval = 2000
-
     since = time.time()
     best_model_weights = copy.deepcopy(model.state_dict())
 
-    for epoch in range(num_epochs):
-        if (epoch + 1) * epoch_size < iteration:
-            continue
-
-        if iteration == max_iter:
-            break
-
+    for epoch in range(args.epochs):
         for inputs, targets in data_loader:
             inputs = inputs.to(device)
             targets = targets.to(device)
@@ -49,31 +37,35 @@ def train(model: nn.Module, data_loader: DataLoader, criterion: nn.Module, optim
             loss = criterion(output, targets)
             confs, preds = torch.max(output.detach(), dim=1)
 
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
             losses.update(loss.item(), inputs.size(0))
             scores.update(gap(preds, confs, targets), inputs.size(0))
             corrects.update((preds == targets).float().sum(), inputs.size(0))
 
-            iteration += 1
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-            if iteration % verbose_eval == 0:
-                print(f'[{epoch + 1}/{iteration}] Loss: {losses.val:.4f}' \
-                      f' Acc: {corrects.val:.4f} GAP: {scores.val:.4f}')
+            scheduler.step()
 
-            if iteration in [20000, 70000, 140000]:
-                scheduler.step()
+            summary.add_scalar('loss', losses.avg, epoch)
+            summary.add_scalar('acc', corrects.avg, epoch)
+            summary.add_scalar('GAP', scores.avg, epoch)
 
-            if best_acc < corrects.val:
-                best_acc = corrects.val
+            if best_acc < corrects.avg:
+                best_acc = corrects.avg
                 best_model_weights = copy.deepcopy(model.state_dict())
 
-        time_elapsed = time.time() - since
-        print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
-        print('Best val Acc: {:4f}'.format(best_acc))
-        torch.save(best_model_weights, args.weights_dir + 'best_weights_b0_class_1459.pth')
+        print(f'epoch: {epoch} Loss: {losses.avg:.4f}' \
+              f' Acc: {corrects.avg:.4f} GAP: {scores.avg:.4f}')
+
+        corrects.reset()
+        scores.reset()
+        losses.reset()
+
+    time_elapsed = time.time() - since
+    print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+    print('Best val Acc: {:4f}'.format(best_acc))
+    torch.save(best_model_weights, args.weights_dir + 'best_weights_b0_class_1459.pth')
 
 
 if __name__ == "__main__":
@@ -91,10 +83,10 @@ if __name__ == "__main__":
     parser.add_argument('--model_dir', dest='model_dir', default="./checkpoint/")
 
     parser.add_argument('--image_size', dest='image_size', type=int, default=224)
-    parser.add_argument('--epochs', dest='epochs', type=int, default=20000)
-    parser.add_argument('--learning_rate', dest='learning_rate', type=float, default=0.001)
+    parser.add_argument('--epochs', dest='epochs', type=int, default=100)
+    parser.add_argument('--learning_rate', dest='learning_rate', type=float, default=0.0001)
     parser.add_argument('--weight_decay', dest='weight_decay', type=float, default=0.00001)
-    parser.add_argument('--batch_size', dest='batch_size', type=int, default=32)
+    parser.add_argument('--batch_size', dest='batch_size', type=int, default=64)
 
     parser.add_argument('--weights_dir', dest='weights_dir', default='./checkpoint/')
 
@@ -102,10 +94,11 @@ if __name__ == "__main__":
 
     batch_size = args.batch_size
     num_epoch = args.epochs
-    max_iter = 200000
     lr = args.learning_rate
     wd = args.weight_decay
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    summary = SummaryWriter('./runs/')
 
     train_transforms = transforms.Compose([
         transforms.Resize((args.image_size, args.image_size)),
@@ -137,4 +130,5 @@ if __name__ == "__main__":
     optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=wd)
     scheduler = StepLR(optimizer, step_size=1, gamma=0.1)
 
-    train(model=model, data_loader=train_dataloader, criterion=criterion, optimizer=optimizer, scheduler=scheduler, device=device)
+    train(model=model, data_loader=train_dataloader, criterion=criterion, optimizer=optimizer, scheduler=scheduler,
+          device=device, args=args)
