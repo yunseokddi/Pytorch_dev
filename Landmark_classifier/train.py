@@ -17,17 +17,19 @@ from tensorboardX import SummaryWriter
 
 def train(model: nn.Module, data_loader: DataLoader, criterion: nn.Module, optimizer: optim,
           scheduler: optim.lr_scheduler, device: torch.device, args=None):
-
     best_acc = 0.0
-    losses = AverageMeter()
-    scores = AverageMeter()
-    corrects = AverageMeter()
-
+    # losses = AverageMeter()
+    # scores = AverageMeter()
+    # corrects = AverageMeter()
+    data_size = len(train_dataset)
     model.train()
     since = time.time()
     best_model_weights = copy.deepcopy(model.state_dict())
 
     for epoch in range(args.epochs):
+        running_loss = 0.0
+        running_corrects = 0
+
         for inputs, targets in data_loader:
             inputs = inputs.to(device)
             targets = targets.to(device)
@@ -37,30 +39,35 @@ def train(model: nn.Module, data_loader: DataLoader, criterion: nn.Module, optim
             loss = criterion(output, targets)
             confs, preds = torch.max(output.detach(), dim=1)
 
-            losses.update(loss.item(), inputs.size(0))
-            scores.update(gap(preds, confs, targets), inputs.size(0))
-            corrects.update((preds == targets).float().sum(), inputs.size(0))
+            # losses.update(loss.item(), inputs.size(0))
+            # scores.update(gap(preds, confs, targets), inputs.size(0))
+            # corrects.update((preds == targets).float().sum(), inputs.size(0))
 
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
             scheduler.step()
 
-            summary.add_scalar('loss', losses.avg, epoch)
-            summary.add_scalar('acc', corrects.avg, epoch)
-            summary.add_scalar('GAP', scores.avg, epoch)
+            running_loss = loss.detach().item()
+            # running_corrects += torch.sum(preds == targets.data)
 
-            if best_acc < corrects.avg:
-                best_acc = corrects.avg
-                best_model_weights = copy.deepcopy(model.state_dict())
+            summary.add_scalar('loss', running_loss, epoch)
+            # summary.add_scalar('acc', running_corrects, epoch)
+            # summary.add_scalar('GAP', scores.avg, epoch)
+            # print('epoch : {0} step : [{1}/{2}] loss : {3}'.format(epoch, args.batch_size, len(train_dataloader),
+            #                                                        loss.detach().item()))
 
-        print(f'epoch: {epoch} Loss: {losses.avg:.4f}' \
-              f' Acc: {corrects.avg:.4f} GAP: {scores.avg:.4f}')
+            # if best_acc < running_corrects:
+            #     best_acc = running_corrects
+            #     best_model_weights = copy.deepcopy(model.state_dict())
 
-        corrects.reset()
-        scores.reset()
-        losses.reset()
+        running_loss /= len(train_dataloader)
+        # epoch_acc = running_corrects.double() / data_size
+        print(f'epoch: {epoch} Loss: {running_loss:.4f}')
+
+        # corrects.reset()
+        # scores.reset()
+        # losses.reset()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

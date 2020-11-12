@@ -39,4 +39,3 @@ class LandmarkDataset(Dataset):
             return image, label
         else:
             return image_id, image
-
