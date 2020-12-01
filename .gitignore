@@ -76,3 +76,5 @@ Landmark_classifier/checkpoint/
 #--------------------VDSR-----------------------
 VDSR/dataset/
 
+#korean_face_classifier
+korean_face_classifier/tools/sample_data/
