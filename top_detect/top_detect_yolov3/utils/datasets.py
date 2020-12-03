@@ -99,7 +99,7 @@ class ListDataset(Dataset):
 
         # ---------
         #  Label
-        # ---------
+        # ---------dd
 
         label_path = self.label_files[index % len(self.img_files)].rstrip()
 
