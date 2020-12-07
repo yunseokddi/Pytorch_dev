@@ -79,3 +79,6 @@ VDSR/dataset/
 #korean_face_classifier
 korean_face_classifier/tools/sample_data/
 korean_face_classifier/data/
+
+#-------ECG_classification----------------
+ECG_classification/data/
