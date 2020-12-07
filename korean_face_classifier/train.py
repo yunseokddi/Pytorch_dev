@@ -1,4 +1,7 @@
 import pandas as pd
+import torch.nn as nn
+import torch.optim as optim
+import torch
 
 from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
@@ -6,6 +9,7 @@ from torchvision.datasets import ImageFolder
 from efficientnet_pytorch import EfficientNet
 
 df = pd.read_excel('./data/KFace_data_information_Folder1_400.xlsx')
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 age_dict = {'20대': '0',
             '30대': '1',
@@ -34,7 +38,16 @@ train_transforms = transforms.Compose([
     transforms.Normalize((0.4452, 0.4457, 0.4464), (0.2592, 0.2596, 0.2600)),
 ])
 
-train_dataset = ImageFolder(root='./sample_data/image', transform=train_transforms)  # change image directory
+train_dataset = ImageFolder(root='./data/image', transform=train_transforms)  # change image directory
 train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True, num_workers=0)
 
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=8)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.00001)
+
+for epoch in range(30):
+    running_loss =0.0
+
+    for input, target in train_loader:
+        print(target)
