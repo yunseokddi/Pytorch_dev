@@ -82,3 +82,5 @@ korean_face_classifier/data/
 
 #-------ECG_classification----------------
 ECG_classification/data/
+ECG_classification/runs/
+ECG_classification/checkpoint/
