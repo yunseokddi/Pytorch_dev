@@ -27,7 +27,6 @@ eval_results/
 
 # images
 *.jpg
-*.png
 *.zip
 *.xml
 
@@ -61,6 +60,7 @@ facial_age_classifier/EfficientNet_ver/data/
 facial_age_classifier/EfficientNet_ver/weights/
 facial_age_classifier/EfficientNet_ver/data_preprocess/class_4_data/
 facial_age_classifier/EfficientNet_ver/data_preprocess/data/
+facial_age_classifier/ResNet_ver/data/
 
 #car_distance_recognition
 car_distance_recognition/sample/
