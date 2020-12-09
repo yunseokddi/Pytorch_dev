@@ -81,6 +81,8 @@ korean_face_classifier/tools/sample_data/
 korean_face_classifier/data/
 
 #-------ECG_classification----------------
-ECG_classification/2D_CNN_ver/data/
-ECG_classification/2D_CNN_ver/runs/
-ECG_classification/2D_CNN_ver/checkpoint/
+ECG_classification_2D_Ver/data/
+ECG_classification_2D_Ver/runs/
+ECG_classification_2D_Ver/checkpoint/
+
+ECG_classification_1D_Ver/data/
