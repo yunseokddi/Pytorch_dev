@@ -20,4 +20,4 @@ out = "./result"
 model = LSTM(num_classes, input_size, hidden_size, num_layers, device)
 model.to(device)
 
-summary(model, inputs)
+summary(model,(1,128,128))

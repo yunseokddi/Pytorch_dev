@@ -6,7 +6,7 @@ import copy
 import numpy as np
 
 from preprocess import load_ECG_dataset, split_dataset
-from models import LSTM, UNET_1D
+from models import LSTM
 from torch.optim import lr_scheduler
 
 def train_model(model, dataloaders_dict, criterion, optimizer, scheduler, device,
@@ -39,6 +39,7 @@ def train_model(model, dataloaders_dict, criterion, optimizer, scheduler, device
             running_corrects = 0
 
             for inputs, labels in dataloaders_dict[phase]:
+                print(inputs.shape)
                 inputs = inputs.to(device)
                 labels = labels.to(device).long()
 
@@ -144,8 +145,7 @@ if __name__ == "__main__":
 
     dataloaders_dict = {"train": train_dataloader, "val": val_dataloader}
 
-    model = UNET_1D(1,128,7,3)
-    # model = LSTM(num_classes, input_size, hidden_size, num_layers, device)
+    model = LSTM(num_classes, input_size, hidden_size, num_layers, device)
     model = model.to(device)
 
     criterion = nn.CrossEntropyLoss().to(device)
