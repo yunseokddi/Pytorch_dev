@@ -58,7 +58,7 @@ model.to(device)
 criterion = nn.BCEWithLogitsLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0001)
 
-epochs = 50
+epochs = 20
 
 for epoch in range(epochs):
     running_loss = 0.0
